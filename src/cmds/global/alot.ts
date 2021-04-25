@@ -73,13 +73,20 @@ export async function run(interaction: CommandInteraction): Promise<void> {
                         image: maskimg
                     });
                
-                    canvas.write({ format: 'png' }, (err: Error, buffer: Buffer) => {
+                    canvas.write({ format: 'png' }, async (err: Error, buffer: Buffer) => {
                         if (err) {
                             Util.log((err.stack as string));
                             return interaction.editReply('An error occured.');
                         }
-                
-                        const attachment = new MessageAttachment(buffer, 'alot.png');
+                        
+                        const cv = Canvas.createCanvas(128, 128);
+                        const background = await Canvas.loadImage(buffer);
+                        const toplayer = await Canvas.loadImage(path.join(__dirname, '../../../data/images/alottoplayer.png'));
+                        const ctt = cv.getContext('2d');
+                        ctt.drawImage(background, 0, 0, cv.width, cv.height);
+                        ctt.drawImage(toplayer, 0, 0, cv.width, cv.height);
+
+                        const attachment = new MessageAttachment(cv.toBuffer(), 'alot.png');
             
                         const embed = new MessageEmbed()
                         .setTitle('Here is your alot:')

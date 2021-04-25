@@ -2,7 +2,7 @@ import { CommandInteraction } from 'discord.js';
 import { Command } from 'src/@types/Util';
 
 export async function run(interaction: CommandInteraction): Promise<void> {
-    const url = '';
+    const url = 'https://discord.com/api/oauth2/authorize?client_id=835992696610488380&permissions=1073742848&scope=bot%20applications.commands';
     return interaction.reply(`[Invite me](<${url}>)`);       
 }
 
