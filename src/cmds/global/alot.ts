@@ -61,51 +61,42 @@ export async function run(interaction: CommandInteraction): Promise<void> {
                     ctx.drawImage(image, item.x, item.y, 25, 25);
                 }
 
-                const attachment = new MessageAttachment(cvs.toBuffer(), 'target.png');
-                return interaction.editReply('test', { files: [attachment]});
-            });
+                canvas.load(cvs.toBuffer(), (err: Error) => {
+                    if (err) {
+                        Util.log((err.stack as string));
+                        return interaction.editReply('An error occured.');
+                    }
+            
+                    canvas.mask({
+                        image: 'https://media.discordapp.net/attachments/709062739581992971/835951798828269608/alot.png'
+                    });
+               
+                    canvas.write({ format:'png' }, (err: Error, buffer: Buffer) => {
+                        if (err) {
+                            Util.log((err.stack as string));
+                            return interaction.editReply('An error occured.');
+                        }
                 
+                        const attachment = new MessageAttachment(buffer, 'alot.png');
+            
+                        const embed = new MessageEmbed()
+                        .setTitle('Here is your alot:')
+                        .setDescription(`alotofdebugging`)
+                        .setImage('attachment://alot.png')
+                        .setColor('#997a63')
+                        .attachFiles([attachment])
+                        .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
+            
+                        return interaction.editReply(embed);
+                    });
+                
+                }); 
+            }); 
         }); 
     } catch (ex) {
         Util.log(ex);
         return interaction.editReply('An error ocurred!');
     }
-    
-    /*
-    
-/*
-    canvas.load(path.join(__dirname, '../../../data/images/alotbg.png'), (err: Error) => {
-        if (err) {
-            Util.log((err.stack as string));
-            return interaction.editReply('An error occured.');
-        }
-    /*
-        // Note: You will have to load 'MY_MASK_IMAGE' separately.
-        canvas.mask({
-            image: '../../../data/images/alotbg.png'
-        });
-   
-        canvas.write({ format:'png' }, (err: Error, buf: Buffer) => {
-            if (err) {
-                Util.log((err.stack as string));
-                return interaction.editReply('An error occured.');
-            }
-    
-            const attachment = new MessageAttachment(buf, 'alot.png');
-
-            const embed = new MessageEmbed()
-            .setTitle('Here is your alot:')
-            .setDescription(`alotofdebugging`)
-            .setImage('attachment://alot.png')
-            .setColor('#997a63')
-            .attachFiles([attachment])
-            .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
-
-            //return interaction.editReply(embed);
-        });
-    
-    }); 
-    */
 }
 
 export const info: Command['info'] = {
