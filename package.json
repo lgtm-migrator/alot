@@ -23,6 +23,7 @@
     "last-commit-log": "^3.1.1",
     "moment": "^2.29.1",
     "node-fetch": "^2.6.1",
+    "pixl-canvas-plus": "^2.0.10",
     "pretty-error": "^3.0.3",
     "recursive-readdir": "^2.2.2",
     "systeminformation": "^5.6.12",
