@@ -17,10 +17,5 @@ export default {
         if (ignore.includes(err.code)) return console.log('Unhandled Rejection: ' + `\`\`\`\n${err.stack + '\n\nJSON: ' + JSON.stringify(err, null, 2)}\n\`\`\``);
     
         Util.log('Unhandled Rejection: ' + `\`\`\`\n${err.stack + '\n\nJSON: ' + JSON.stringify(err, null, 2)}\n\`\`\``);
-    
-        if (process.env.CI) {
-            console.log('Unhandled Rejection detected, marking as failed');
-            process.exit(1);
-        }
     }
 };

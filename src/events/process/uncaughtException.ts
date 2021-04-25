@@ -5,10 +5,5 @@ export default {
     process: true,
     async run(err: Error): Promise<void> {
         Util.log('Uncaught Exception: ' + `\`\`\`\n${err.stack}\n\`\`\``);
-
-        if (process.env.CI) {
-            console.log('Exception detected, marking as failed');
-            process.exit(1);
-        }
     }
 };

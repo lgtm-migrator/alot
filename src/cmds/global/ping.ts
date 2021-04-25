@@ -18,8 +18,6 @@ export async function run(interaction: CommandInteraction): Promise<void> {
 }
 
 export const info: Command['info'] = {
-    owner: false,
-    nsfw: false,
     roles: [],
     user_perms: [],
     bot_perms: []
@@ -27,6 +25,5 @@ export const info: Command['info'] = {
 
 export const data: Command['data'] = {
     name: 'ping',
-    description: 'Gideon\'s ping',
-    defaultPermission: true
+    description: 'alot of ping'
 };
