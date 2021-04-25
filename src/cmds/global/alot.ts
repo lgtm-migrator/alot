@@ -61,17 +61,19 @@ export async function run(interaction: CommandInteraction): Promise<void> {
                     ctx.drawImage(image, item.x, item.y, 25, 25);
                 }
 
-                canvas.load(cvs.toBuffer(), (err: Error) => {
+                canvas.load(cvs.toBuffer(), async (err: Error) => {
                     if (err) {
                         Util.log((err.stack as string));
                         return interaction.editReply('An error occured.');
                     }
-            
+                    
+                    const maskimg = await canvas.load(path.join(__dirname, '../../../data/images/alotbg.png'));
+
                     canvas.mask({
-                        image: 'https://media.discordapp.net/attachments/709062739581992971/835951798828269608/alot.png'
+                        image: maskimg
                     });
                
-                    canvas.write({ format:'png' }, (err: Error, buffer: Buffer) => {
+                    canvas.write({ format: 'png' }, (err: Error, buffer: Buffer) => {
                         if (err) {
                             Util.log((err.stack as string));
                             return interaction.editReply('An error occured.');
@@ -84,6 +86,7 @@ export async function run(interaction: CommandInteraction): Promise<void> {
                         .setDescription(`alotofdebugging`)
                         .setImage('attachment://alot.png')
                         .setColor('#997a63')
+                        .setThumbnail((process.alot.user?.displayAvatarURL() as string))
                         .attachFiles([attachment])
                         .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
             
