@@ -55,9 +55,7 @@ interface Event {
 }
 
 interface CanvasImgArray {
-    url: string;
+    img: Buffer;
     x: number;
     y: number;
-    sw: number;
-    sh: number;
 }
