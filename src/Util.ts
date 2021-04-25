@@ -187,6 +187,11 @@ class Util {
         if (process.alot.user?.id === '') { //to be filled later
             const globalcmds = await process.alot.application?.commands.fetch();
 
+            if (!globalcmds) {
+                await process.alot.application?.commands.set(global.array());
+                return Util.log('Application Commands deployed!');
+            }
+
 
             if (globalcmds?.size !== global.size) {
                 if (globalcmds?.size !== global.size) {
