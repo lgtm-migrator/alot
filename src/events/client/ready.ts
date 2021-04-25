@@ -13,6 +13,7 @@ export default {
         await Util.LoadCommands();
         await Util.DeployCommands();
     
+        alot.user?.setActivity('alot of guilds: ' + alot.guilds.cache.size, { type: 'WATCHING' });
         console.log('Ready!');
 
         const lcl = new LCL('../');
