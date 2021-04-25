@@ -12,6 +12,7 @@ export async function run(interaction: CommandInteraction): Promise<void> {
         .setTitle('alot of ping:')
         .setDescription(`WebSocket ping: ${process.alot.ws.ping.toFixed(2)} ms\nREST ping: ${took} ms`)
         .setColor('#997a63')
+        .setThumbnail((process.alot.user?.displayAvatarURL() as string))
         .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
 
         return interaction.reply(embed);
