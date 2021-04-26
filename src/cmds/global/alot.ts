@@ -33,10 +33,6 @@ export async function run(interaction: CommandInteraction): Promise<void> {
                     Util.log((err.stack as string));
                     return interaction.editReply('An error occured.');
                 }
-        
-                const ctx = cvs.getContext('2d');
-                const background = await Canvas.loadImage(path.join(__dirname, '../../../data/images/alotbg.png'));
-                ctx.drawImage(background, 0, 0, cvs.width, cvs.height);
 
                 const imgs: CanvasImgArray[] = [
                 { img: buf, x: 0, y: 0 }, { img: buf, x: 0, y: 23 }, { img: buf, x: 0, y: 43 }, 
