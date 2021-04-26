@@ -12,6 +12,7 @@ export function DeployCommands(): Promise<void>;
 export function fetchJSON(url: string): Promise<unknown>;
 export function truncate(str: string, length: number, useWordBoundary: boolean): string;
 export function normalize(num: number): string;
+export function Avatars(): Promise<void>;
 
 declare module 'discord.js' {
     interface Client {

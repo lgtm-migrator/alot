@@ -14,6 +14,10 @@ export default {
         await Util.DeployCommands();
     
         alot.user?.setActivity('alot of guilds: ' + alot.guilds.cache.size, { type: 'WATCHING' });
+
+        const aday = 1000 * 60 * 60 * 24;
+        //Util.Avatars();
+        //setInterval(avatars, aday);
         console.log('Ready!');
 
         const lcl = new LCL('../');

@@ -67,7 +67,7 @@ export async function run(interaction: CommandInteraction): Promise<void> {
                         return interaction.editReply('An error occured.');
                     }
                     
-                    const maskimg = await canvas.load(path.join(__dirname, '../../../data/images/alotbg.png'));
+                    const maskimg = await Canvas.loadImage(path.join(__dirname, '../../../data/images/alotbg.png'));
 
                     canvas.mask({
                         image: maskimg

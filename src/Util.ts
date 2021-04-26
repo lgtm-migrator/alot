@@ -209,15 +209,12 @@ class Util {
             }
         }
 
-        else if (process.alot.user?.id === '598132992874905600') { 
+        else if (process.alot.user?.id === '835992696610488380') { 
             await process.alot.guilds.cache.get('709061970078335027')?.commands.set(global.array());
             return Util.log('Application Commands deployed!');
         }
     }
 
-    /**
-     * Load events
-     */
     static LoadEvents(): Promise<void> {
         return new Promise((resolve, reject) => {
             const start = process.hrtime.bigint();
@@ -256,6 +253,18 @@ class Util {
             });
         });
     }
+
+    static async Avatars() {
+        recursive('../data/avatars', async (err, files) => {
+            if (err) {
+                Util.log('Error while reading files:\n' + err);
+            }
+    
+            const pngfiles = files.filter(fileName => fileName.endsWith('.png'));
+            const result = pngfiles[Math.floor(Math.random() * pngfiles.length)];
+            await process.alot.user?.setAvatar(result);
+        });
+    };
 }
 
 export default Util;
