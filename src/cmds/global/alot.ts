@@ -15,7 +15,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
         let target: string | undefined = interaction.user.displayAvatarURL({ format: 'png'});
         if (options[0]?.type === 'USER') target = options[0].user?.displayAvatarURL({ format: 'png'});
         else if (options[0]?.type === 'STRING') {
-            if (!(options[0].value as string)?.match(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|png)/g)) return interaction.editReply('Please provide a valid image URL!');
+            if (!(options[0].value as string)?.match(/(https?:)?\/\/?[^'"<>]+?\.(jpg|jpeg|png)/g)) return interaction.editReply('Please provide a valid image URL!');
             else target = options[0].value as string;
         }
         
@@ -29,7 +29,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
             }
         
             canvas.border({
-                "size": 2,
+                "size": 3,
                 "color": "#000000",
                 "mode": "inside"
             });
@@ -39,28 +39,11 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                     Util.log((err.stack as string));
                     return interaction.editReply('An error occured.');
                 }
-
-                const imgs: CanvasImgArray[] = [
-                { img: buf, x: 0, y: 0 }, { img: buf, x: 0, y: 23 }, { img: buf, x: 0, y: 43 }, 
-                { img: buf, x: 0, y: 63 }, { img: buf, x: 0, y: 83 }, { img: buf, x: 0, y: 103 },
-                { img: buf, x: 0, y: 119 }, { img: buf, x: 23, y: 0 }, { img: buf, x: 23, y: 23 }, 
-                { img: buf, x: 23, y: 43 }, { img: buf, x: 23, y: 63 }, { img: buf, x: 23, y: 83 },
-                { img: buf, x: 23, y: 103 }, { img: buf, x: 23, y: 119 }, { img: buf, x: 43, y: 0 }, 
-                { img: buf, x: 43, y: 23 }, { img: buf, x: 43, y: 43 }, { img: buf, x: 43, y: 63 },
-                { img: buf, x: 43, y: 83 }, { img: buf, x: 43, y: 103 }, { img: buf, x: 43, y: 119 }, 
-                { img: buf, x: 63, y: 0 }, { img: buf, x: 63, y: 23 }, { img: buf, x: 63, y: 43 },
-                { img: buf, x: 63, y: 63 }, { img: buf, x: 63, y: 83 }, { img: buf, x: 63, y: 103 }, 
-                { img: buf, x: 63, y: 119 }, { img: buf, x: 83, y: 0 }, { img: buf, x: 83, y: 23 },
-                { img: buf, x: 83, y: 43 }, { img: buf, x: 83, y: 63 }, { img: buf, x: 83, y: 83 }, 
-                { img: buf, x: 83, y: 103 }, { img: buf, x: 83, y: 119 }, { img: buf, x: 105, y: 0 },
-                { img: buf, x: 105, y: 23 }, { img: buf, x: 105, y: 43 },{ img: buf, x: 105, y: 63 }, 
-                { img: buf, x: 105, y: 83 }, { img: buf, x: 105, y: 103 }, { img: buf, x: 105, y: 119 },
-                ];
                 
-                for (const item of imgs) {
+                for (let i = 0; i < 400; i++) { // 'pattern' aka just draw this alot until it covers everything randomly
                     const ctx = cvs.getContext('2d');
-                    const image = await Canvas.loadImage(item.img);
-                    ctx.drawImage(image, item.x, item.y, 25, 25);
+                    const image = await Canvas.loadImage(buf);
+                    ctx.drawImage(image, Math.random() * (129 - 0) + 0, Math.random() * (129 - 0) + 0, 30, 30);
                 }
 
                 canvas.load(cvs.toBuffer(), async (err: Error) => {
