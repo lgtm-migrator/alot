@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageEmbed, MessageAttachment, Message } from 'discord.js';
+import { CommandInteraction, CommandInteractionOption, MessageEmbed, Permissions, MessageAttachment, Message, TextChannel } from 'discord.js';
 import { Command, CanvasImgArray } from 'src/@types/Util';
 //@ts-ignore
 import CanvasPlus from 'pixl-canvas-plus';
@@ -8,12 +8,18 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export async function run(interaction: CommandInteraction): Promise<void | Message | null> {
+export async function run(interaction: CommandInteraction, options: CommandInteractionOption[]): Promise<void | Message | null> {
     try {
         interaction.defer();
-    
+        
+        let target: string | undefined = interaction.user.displayAvatarURL({ format: 'png'});
+        if (options[0]?.type === 'USER') target = options[0].user?.displayAvatarURL({ format: 'png'});
+        else if (options[0]?.type === 'STRING') {
+            if (!(options[0].value as string)?.match(/(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|jpeg|png)/g)) return interaction.editReply('Please provide a valid image URL!');
+            else target = options[0].value as string;
+        }
+        
         const canvas = new CanvasPlus();
-        const target = interaction.user.displayAvatarURL({ format: 'png'});
         const cvs = Canvas.createCanvas(128, 128);
 
         canvas.load(target, (err: Error) => {
@@ -84,23 +90,53 @@ export async function run(interaction: CommandInteraction): Promise<void | Messa
                         ctt.drawImage(toplayer, 0, 0, cv.width, cv.height);
 
                         const attachment = new MessageAttachment(cv.toBuffer(), 'alot.png');
-            
-                        const embed = new MessageEmbed()
-                        .setTitle('Here is your alot:')
-                        .setDescription(`alotofdebugging`)
-                        .setImage('attachment://alot.png')
-                        .setColor('#997a63')
-                        .attachFiles([attachment])
-                        .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
-            
-                        return interaction.editReply(embed);
+
+                        if (options.find(x => x.name === 'emoji')?.value === true) {
+                            const member = await interaction.guild?.members.fetch(interaction.user);
+
+                            if (member?.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS) && interaction.guild?.me?.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS)) {
+                                const emoji = await interaction.guild?.emojis.create(cv.toBuffer(), 'alotof' + (options[0]?.user?.username ?? interaction.user.username).toLowerCase().replace(/ /g,''));
+
+                                const embed = new MessageEmbed()
+                                .setTitle('Here is your alot:')
+                                .setDescription(`Your emoji ${emoji} has also been successfully created!`)
+                                .setImage('attachment://alot.png')
+                                .setColor('#997a63')
+                                .attachFiles([attachment])
+                                .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
+                    
+                                return interaction.editReply(embed);
+                            }
+                            else {
+                                const embed = new MessageEmbed()
+                                .setTitle('Here is your alot:')
+                                .setDescription(`Uh-oh, looks like at least one of us doesn't have \`MANAGE_EMOJIS\` set. Anyway, enjoy your alot below.`)
+                                .setImage('attachment://alot.png')
+                                .setColor('#997a63')
+                                .attachFiles([attachment])
+                                .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
+                    
+                                return interaction.editReply(embed);
+                            }
+                        }
+                        else {
+                            const embed = new MessageEmbed()
+                            .setTitle('Here is your alot:')
+                            .setDescription('`alotof' + (options[0]?.user?.username ?? interaction.user.username).toLowerCase().replace(/ /g,'') + '`')
+                            .setImage('attachment://alot.png')
+                            .setColor('#997a63')
+                            .attachFiles([attachment])
+                            .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
+                
+                            return interaction.editReply(embed);
+                        }
                     });
                 
                 }); 
             }); 
         }); 
     } catch (ex) {
-        Util.log(ex);
+        Util.log(ex.stack);
         return interaction.editReply('An error ocurred!');
     }
 }
@@ -128,8 +164,8 @@ export const data: Command['data'] = {
             required: false
         },
         {
-            name: 'emote',
-            description: 'create an emote of this alot (perms required)',
+            name: 'emoji',
+            description: 'create an emoji of this alot (perms required)',
             type: 'BOOLEAN',
             required: false
         }
