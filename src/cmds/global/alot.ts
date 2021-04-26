@@ -19,108 +19,88 @@ export async function run(interaction: CommandInteraction, options: CommandInter
         
         const canvas = new CanvasPlus();
         const cvs = Canvas.createCanvas(128, 128);
+                
+        for (let i = 0; i < 400; i++) { // 'pattern' aka just draw this alot until it covers everything randomly
+            const ctx = cvs.getContext('2d');
+            const image = await Canvas.loadImage(target as string);
+            ctx.drawImage(image, Math.random() * (129 - 0) + 0, Math.random() * (129 - 0) + 0, 30, 30);
+        }
 
-        canvas.load(target, (err: Error) => {
+        canvas.load(cvs.toBuffer(), async (err: Error) => {
             if (err) {
                 Util.log((err.message as string));
-                return interaction.editReply('An error occured.');
+                return interaction.editReply('An error occured. Please make sure that the URL is well formed.');
             }
-        
-            canvas.border({
-                "size": 3,
-                "color": "#000000",
-                "mode": "inside"
+            
+            const maskimg = await Canvas.loadImage(path.join(__dirname, '../../../data/images/alotbg.png'));
+
+            canvas.mask({
+                image: maskimg
             });
-    
-            canvas.write({ format:'png' }, async (err: Error, buf: Buffer) => {
+               
+            canvas.write({ format: 'png' }, async (err: Error, buffer: Buffer) => {
                 if (err) {
                     Util.log((err.message as string));
                     return interaction.editReply('An error occured. Please make sure that the URL is well formed.');
                 }
                 
-                for (let i = 0; i < 400; i++) { // 'pattern' aka just draw this alot until it covers everything randomly
-                    const ctx = cvs.getContext('2d');
-                    const image = await Canvas.loadImage(buf);
-                    ctx.drawImage(image, Math.random() * (129 - 0) + 0, Math.random() * (129 - 0) + 0, 30, 30);
+            const cv = Canvas.createCanvas(128, 128);
+            const background = await Canvas.loadImage(buffer);
+            const toplayer = await Canvas.loadImage(path.join(__dirname, '../../../data/images/alottoplayer.png'));
+
+            const ctt = cv.getContext('2d');
+            ctt.drawImage(background, 0, 0, cv.width, cv.height);
+            ctt.drawImage(toplayer, 0, 0, cv.width, cv.height);
+
+            const attachment = new MessageAttachment(cv.toBuffer(), 'alot.png');
+
+            let alotstring = '';
+            if (options.find(x => x.name === 'image')) alotstring = '';
+            else if (options.find(x => x.name === 'user')) alotstring = '`alotof' + options.find(x => x.name === 'user')?.user?.username.toLowerCase().replace(/ /g,'') + '`';
+            else alotstring = '`alotof' + interaction.user.username.toLowerCase().replace(/ /g,'') + '`';
+
+            if (options.find(x => x.name === 'emoji')?.value === true) {
+                const member = await interaction.guild?.members.fetch(interaction.user);
+
+                if (member?.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS) && interaction.guild?.me?.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS)) {
+                    const emoji = await interaction.guild?.emojis.create(cv.toBuffer(), 'alotofsomething');
+
+                    const embed = new MessageEmbed()
+                    .setTitle('Here is your alot:')
+                    .setDescription(`Your emoji ${emoji} has also been successfully created!`)
+                    .setImage('attachment://alot.png')
+                    .setColor('#997a63')
+                    .attachFiles([attachment])
+                    .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
+        
+                    return interaction.editReply(embed);
                 }
+                else {
+                    const embed = new MessageEmbed()
+                    .setTitle('Here is your alot:')
+                    .setDescription(`Uh-oh, looks like at least one of us doesn't have \`MANAGE_EMOJIS\` set. Anyway, enjoy your alot below.`)
+                    .setImage('attachment://alot.png')
+                    .setColor('#997a63')
+                    .attachFiles([attachment])
+                    .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
+        
+                    return interaction.editReply(embed);
+                }
+            }
+            else {
+                const embed = new MessageEmbed()
+                .setTitle('Here is your alot:')
+                .setDescription(alotstring)
+                .setImage('attachment://alot.png')
+                .setColor('#997a63')
+                .attachFiles([attachment])
+                .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
 
-                canvas.load(cvs.toBuffer(), async (err: Error) => {
-                    if (err) {
-                        Util.log((err.message as string));
-                        return interaction.editReply('An error occured. Please make sure that the URL is well formed.');
-                    }
-                    
-                    const maskimg = await Canvas.loadImage(path.join(__dirname, '../../../data/images/alotbg.png'));
-
-                    canvas.mask({
-                        image: maskimg
-                    });
-               
-                    canvas.write({ format: 'png' }, async (err: Error, buffer: Buffer) => {
-                        if (err) {
-                            Util.log((err.message as string));
-                            return interaction.editReply('An error occured. Please make sure that the URL is well formed.');
-                        }
-                        
-                        const cv = Canvas.createCanvas(128, 128);
-                        const background = await Canvas.loadImage(buffer);
-                        const toplayer = await Canvas.loadImage(path.join(__dirname, '../../../data/images/alottoplayer.png'));
-
-                        const ctt = cv.getContext('2d');
-                        ctt.drawImage(background, 0, 0, cv.width, cv.height);
-                        ctt.drawImage(toplayer, 0, 0, cv.width, cv.height);
-
-                        const attachment = new MessageAttachment(cv.toBuffer(), 'alot.png');
-
-                        let alotstring = '';
-                        if (options.find(x => x.name === 'image')) alotstring = '';
-                        else if (options.find(x => x.name === 'user')) alotstring = '`alotof' + options.find(x => x.name === 'user')?.user?.username.toLowerCase().replace(/ /g,'') + '`';
-                        else alotstring = '`alotof' + interaction.user.username.toLowerCase().replace(/ /g,'') + '`';
-
-                        if (options.find(x => x.name === 'emoji')?.value === true) {
-                            const member = await interaction.guild?.members.fetch(interaction.user);
-
-                            if (member?.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS) && interaction.guild?.me?.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS)) {
-                                const emoji = await interaction.guild?.emojis.create(cv.toBuffer(), 'alotofsomething');
-
-                                const embed = new MessageEmbed()
-                                .setTitle('Here is your alot:')
-                                .setDescription(`Your emoji ${emoji} has also been successfully created!`)
-                                .setImage('attachment://alot.png')
-                                .setColor('#997a63')
-                                .attachFiles([attachment])
-                                .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
-                    
-                                return interaction.editReply(embed);
-                            }
-                            else {
-                                const embed = new MessageEmbed()
-                                .setTitle('Here is your alot:')
-                                .setDescription(`Uh-oh, looks like at least one of us doesn't have \`MANAGE_EMOJIS\` set. Anyway, enjoy your alot below.`)
-                                .setImage('attachment://alot.png')
-                                .setColor('#997a63')
-                                .attachFiles([attachment])
-                                .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
-                    
-                                return interaction.editReply(embed);
-                            }
-                        }
-                        else {
-                            const embed = new MessageEmbed()
-                            .setTitle('Here is your alot:')
-                            .setDescription(alotstring)
-                            .setImage('attachment://alot.png')
-                            .setColor('#997a63')
-                            .attachFiles([attachment])
-                            .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
-
-                            return interaction.editReply(embed);
-                        }
-                    });
-                
-                }); 
-            }); 
-        }); 
+                return interaction.editReply(embed);
+            }
+        });
+    
+    }); 
     } catch (ex) {
         Util.log(ex.message);
         return interaction.editReply('An error ocurred!');
