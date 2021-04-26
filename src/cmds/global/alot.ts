@@ -1,5 +1,5 @@
 import { CommandInteraction, CommandInteractionOption, MessageEmbed, Permissions, MessageAttachment, Message, TextChannel } from 'discord.js';
-import { Command, CanvasImgArray } from 'src/@types/Util';
+import { Command } from 'src/@types/Util';
 //@ts-ignore
 import CanvasPlus from 'pixl-canvas-plus';
 import Canvas from 'canvas';
@@ -74,11 +74,16 @@ export async function run(interaction: CommandInteraction, options: CommandInter
 
                         const attachment = new MessageAttachment(cv.toBuffer(), 'alot.png');
 
+                        let alotstring = '';
+                        if (options.find(x => x.name === 'image')) alotstring = 'alotofsomething';
+                        else if (options.find(x => x.name === 'user')) alotstring = 'alotof' + options.find(x => x.name === 'user')?.user?.username.toLowerCase().replace(/ /g,'');
+                        else alotstring = 'alotof' + interaction.user.username.toLowerCase().replace(/ /g,'');
+
                         if (options.find(x => x.name === 'emoji')?.value === true) {
                             const member = await interaction.guild?.members.fetch(interaction.user);
 
                             if (member?.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS) && interaction.guild?.me?.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS)) {
-                                const emoji = await interaction.guild?.emojis.create(cv.toBuffer(), 'alotof' + (options[0]?.user?.username ?? interaction.user.username).toLowerCase().replace(/ /g,''));
+                                const emoji = await interaction.guild?.emojis.create(cv.toBuffer(), alotstring);
 
                                 const embed = new MessageEmbed()
                                 .setTitle('Here is your alot:')
@@ -105,12 +110,12 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                         else {
                             const embed = new MessageEmbed()
                             .setTitle('Here is your alot:')
-                            .setDescription('`alotof' + (options[0]?.user?.username ?? interaction.user.username).toLowerCase().replace(/ /g,'') + '`')
+                            .setDescription('`' + alotstring + '`')
                             .setImage('attachment://alot.png')
                             .setColor('#997a63')
                             .attachFiles([attachment])
                             .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
-                
+
                             return interaction.editReply(embed);
                         }
                     });

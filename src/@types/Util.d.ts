@@ -54,9 +54,3 @@ interface Event {
     process?: boolean
     async run(...args: unknown[]): Promise<void>;
 }
-
-interface CanvasImgArray {
-    img: Buffer;
-    x: number;
-    y: number;
-}
