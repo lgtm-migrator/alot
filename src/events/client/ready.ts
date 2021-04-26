@@ -13,8 +13,14 @@ export default {
         await Util.LoadCommands();
         await Util.DeployCommands();
     
-        alot.user?.setActivity('alot of guilds: ' + alot.guilds.cache.size, { type: 'WATCHING' });
-
+        const activities = async () => {
+            const users = alot.guilds.cache.reduce((r, d) => r + d.memberCount, 0);
+            alot.user?.setActivity('alot of guilds: ' + alot.guilds.cache.size, { type: 'WATCHING' });
+            await Util.delay(10000)
+            alot.user?.setActivity('alot of users: ' + users, { type: 'WATCHING' });
+        }
+        
+        setInterval(activities, 20000);
         const aday = 1000 * 60 * 60 * 24;
         //Util.Avatars(); djs doesn't fucking work, setting avatars broken, piss off
         //setInterval(avatars, aday);

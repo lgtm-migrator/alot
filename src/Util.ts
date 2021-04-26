@@ -84,10 +84,10 @@ class Util {
 
         if (typeof message == 'string') {
             for (const msg of Discord.Util.splitMessage(message, { maxLength: 1980 })) {
-                client.send(msg, { avatarURL: process.alot.user?.displayAvatarURL(), username: 'Alot-Of-Logs', files: files });
+                client.send(msg, { avatarURL: process.alot.user?.displayAvatarURL(), username: 'alot-of-logs', files: files });
             }
         }
-        else client.send(null, { embeds: [message], avatarURL: process.alot.user?.displayAvatarURL(), username: 'Alot-Of-Logs', files: files });
+        else client.send(null, { embeds: [message], avatarURL: process.alot.user?.displayAvatarURL(), username: 'alot-of-logs', files: files });
         
         return true;
     }
