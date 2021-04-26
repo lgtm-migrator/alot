@@ -149,7 +149,7 @@ export const info: Command['info'] = {
 
 export const data: Command['data'] = {
     name: 'alot',
-    description: 'make alot of alots',
+    description: 'make alot of things',
     options: [
         {
             name: 'user',

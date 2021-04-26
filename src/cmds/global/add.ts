@@ -14,5 +14,5 @@ export const info: Command['info'] = {
 
 export const data: Command['data'] = {
     name: 'add',
-    description: 'alot of oauth2 invite link'
+    description: 'invite alot of alots'
 };

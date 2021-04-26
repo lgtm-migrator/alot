@@ -30,5 +30,5 @@ export const info: Command['info'] = {
 
 export const data: Command['data'] = {
     name: 'ping',
-    description: 'alot of ping'
+    description: 'ping alot'
 };
