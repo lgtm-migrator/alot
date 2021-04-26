@@ -6,7 +6,7 @@ import path from 'path';
 import { Command } from './@types/Util.js';
 import { Collection } from 'discord.js';
 import { ApplicationCommandData } from 'discord.js';
-import * as Md5 from 'ts-md5/dist/md5.js';
+import Md5 from 'md5';
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -203,8 +203,8 @@ class Util {
             }
             
             else {
-                const globallocalhash = Md5.Md5.hashStr(JSON.stringify(global.map(x => x.options).filter(x => x !== undefined && (x as unknown as boolean) !== Array.isArray(x) && x.length)));
-                const globalhash = Md5.Md5.hashStr(JSON.stringify(globalcmds.map(x => x.options).filter(x => x !== undefined && (x as unknown as boolean) !== Array.isArray(x) && x.length)));
+                const globallocalhash = Md5((JSON.stringify(global.map(x => x.options).filter(x => x !== undefined && (x as unknown as boolean) !== Array.isArray(x) && x.length))));
+                const globalhash = Md5((JSON.stringify(globalcmds.map(x => x.options).filter(x => x !== undefined && (x as unknown as boolean) !== Array.isArray(x) && x.length))));
 
                 if (globallocalhash !== globalhash) await process.alot.application?.commands.set(global.array());
                 return Util.log('Application Commands deployed!');
