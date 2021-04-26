@@ -15,10 +15,10 @@ export async function run(interaction: CommandInteraction): Promise<void> {
         .setThumbnail((process.alot.user?.displayAvatarURL() as string))
         .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
 
-        return interaction.reply(embed);
+        return interaction.editReply(embed);
     }, failed => {
         console.log(failed);
-        return interaction.reply('Failed to measure ping!', { ephemeral: true });
+        return interaction.editReply('Failed to measure ping!');
     });
 }
 

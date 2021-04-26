@@ -3,7 +3,7 @@ import { Command } from 'src/@types/Util';
 
 export async function run(interaction: CommandInteraction): Promise<void> {
     const url = 'https://discord.com/api/oauth2/authorize?client_id=835992696610488380&permissions=1073741824&scope=bot%20applications.commands';
-    return interaction.reply(`[Invite me](<${url}>)`);       
+    return interaction.editReply(`[Invite me](<${url}>)`);       
 }
 
 export const info: Command['info'] = {

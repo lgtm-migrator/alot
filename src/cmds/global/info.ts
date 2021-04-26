@@ -4,8 +4,6 @@ import { default as si } from 'systeminformation';
 import typecript from 'typescript';
 
 export async function run(interaction: CommandInteraction): Promise<void | Message | null> {
-    interaction.defer();
-
     const os = await si.osInfo();
     const cpu = await si.cpu();
     const mem = await si.mem();

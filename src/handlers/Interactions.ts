@@ -11,6 +11,7 @@ class Interactions {
      * @param {Discord.CommandInteraction} command 
      */
     static async SlashCommands(command: CommandInteraction): Promise<boolean | void> {
+        command.defer();
         if (!command.guild) return;
 
         const options = command.options;

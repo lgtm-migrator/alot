@@ -10,8 +10,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export async function run(interaction: CommandInteraction, options: CommandInteractionOption[]): Promise<void | Message | null> {
     try {
-        interaction.defer();
-        
         let target: string | undefined = interaction.user.displayAvatarURL({ format: 'png'});
         if (options[0]?.type === 'USER') target = options[0].user?.displayAvatarURL({ format: 'png'});
         else if (options[0]?.type === 'STRING') {
@@ -24,7 +22,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
 
         canvas.load(target, (err: Error) => {
             if (err) {
-                Util.log((err.stack as string));
+                Util.log((err.message as string));
                 return interaction.editReply('An error occured.');
             }
         
@@ -36,8 +34,8 @@ export async function run(interaction: CommandInteraction, options: CommandInter
     
             canvas.write({ format:'png' }, async (err: Error, buf: Buffer) => {
                 if (err) {
-                    Util.log((err.stack as string));
-                    return interaction.editReply('An error occured.');
+                    Util.log((err.message as string));
+                    return interaction.editReply('An error occured. Please make sure that the URL is well formed.');
                 }
                 
                 for (let i = 0; i < 400; i++) { // 'pattern' aka just draw this alot until it covers everything randomly
@@ -48,8 +46,8 @@ export async function run(interaction: CommandInteraction, options: CommandInter
 
                 canvas.load(cvs.toBuffer(), async (err: Error) => {
                     if (err) {
-                        Util.log((err.stack as string));
-                        return interaction.editReply('An error occured.');
+                        Util.log((err.message as string));
+                        return interaction.editReply('An error occured. Please make sure that the URL is well formed.');
                     }
                     
                     const maskimg = await Canvas.loadImage(path.join(__dirname, '../../../data/images/alotbg.png'));
@@ -60,8 +58,8 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                
                     canvas.write({ format: 'png' }, async (err: Error, buffer: Buffer) => {
                         if (err) {
-                            Util.log((err.stack as string));
-                            return interaction.editReply('An error occured.');
+                            Util.log((err.message as string));
+                            return interaction.editReply('An error occured. Please make sure that the URL is well formed.');
                         }
                         
                         const cv = Canvas.createCanvas(128, 128);
@@ -75,15 +73,15 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                         const attachment = new MessageAttachment(cv.toBuffer(), 'alot.png');
 
                         let alotstring = '';
-                        if (options.find(x => x.name === 'image')) alotstring = 'alotofsomething';
-                        else if (options.find(x => x.name === 'user')) alotstring = 'alotof' + options.find(x => x.name === 'user')?.user?.username.toLowerCase().replace(/ /g,'');
-                        else alotstring = 'alotof' + interaction.user.username.toLowerCase().replace(/ /g,'');
+                        if (options.find(x => x.name === 'image')) alotstring = '';
+                        else if (options.find(x => x.name === 'user')) alotstring = '`alotof' + options.find(x => x.name === 'user')?.user?.username.toLowerCase().replace(/ /g,'') + '`';
+                        else alotstring = '`alotof' + interaction.user.username.toLowerCase().replace(/ /g,'') + '`';
 
                         if (options.find(x => x.name === 'emoji')?.value === true) {
                             const member = await interaction.guild?.members.fetch(interaction.user);
 
                             if (member?.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS) && interaction.guild?.me?.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS)) {
-                                const emoji = await interaction.guild?.emojis.create(cv.toBuffer(), alotstring);
+                                const emoji = await interaction.guild?.emojis.create(cv.toBuffer(), 'alotofsomething');
 
                                 const embed = new MessageEmbed()
                                 .setTitle('Here is your alot:')
@@ -110,7 +108,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                         else {
                             const embed = new MessageEmbed()
                             .setTitle('Here is your alot:')
-                            .setDescription('`' + alotstring + '`')
+                            .setDescription(alotstring)
                             .setImage('attachment://alot.png')
                             .setColor('#997a63')
                             .attachFiles([attachment])
@@ -124,7 +122,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
             }); 
         }); 
     } catch (ex) {
-        Util.log(ex.stack);
+        Util.log(ex.message);
         return interaction.editReply('An error ocurred!');
     }
 }

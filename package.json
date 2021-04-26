@@ -28,7 +28,6 @@
     "pixl-canvas-plus": "^2.0.10",
     "pretty-error": "^3.0.3",
     "recursive-readdir": "^2.2.2",
-    "string-sanitizer": "^1.1.1",
     "systeminformation": "^5.6.12",
     "ts-md5": "^1.2.7",
     "tslib": "^2.2.0",
