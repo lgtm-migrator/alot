@@ -39,10 +39,10 @@ export async function run(interaction: CommandInteraction, options: CommandInter
             });
                
             canvas.write({ format: 'png' }, async (err: Error, buffer: Buffer) => {
-                if (err) {
-                    Util.log((err.message as string));
-                    return interaction.editReply('An error occured. Please make sure that the URL is well formed.');
-                }
+            if (err) {
+                Util.log((err.message as string));
+                return interaction.editReply('An error occured. Please make sure that the URL is well formed.');
+            }
                 
             const cv = Canvas.createCanvas(128, 128);
             const background = await Canvas.loadImage(buffer);
