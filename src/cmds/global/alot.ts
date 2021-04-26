@@ -19,10 +19,10 @@ export async function run(interaction: CommandInteraction, options: CommandInter
         
         const canvas = new CanvasPlus();
         const cvs = Canvas.createCanvas(128, 128);
-                
+        const image = await Canvas.loadImage(target as string);
+
         for (let i = 0; i < 400; i++) { // 'pattern' aka just draw this alot until it covers everything randomly
             const ctx = cvs.getContext('2d');
-            const image = await Canvas.loadImage(target as string);
             ctx.drawImage(image, Math.random() * (129 - 0) + 0, Math.random() * (129 - 0) + 0, 30, 30);
         }
 
