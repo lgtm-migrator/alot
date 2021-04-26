@@ -6,7 +6,7 @@ import Discord from 'discord.js';
 import Util from './Util.js';
 
 const alot = new Discord.Client({
-    intents: 1543,
+    intents: 3,
     shards: 'auto',
     allowedMentions: { parse: ['users', 'roles'], repliedUser: true },
     restRequestTimeout: 25000
