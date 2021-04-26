@@ -186,7 +186,7 @@ class Util {
             global.set(props.data.name, props.data);
         }
 
-        if (process.alot.user?.id === '') { //to be filled later
+        if (process.alot.user?.id === '835992696610488380') {
             const globalcmds = await process.alot.application?.commands.fetch();
 
             if (!globalcmds) {
@@ -211,7 +211,7 @@ class Util {
             }
         }
 
-        else if (process.alot.user?.id === '835992696610488380') { 
+        else if (process.alot.user?.id === '598132992874905600') { 
             await process.alot.guilds.cache.get('709061970078335027')?.commands.set(global.array());
             return Util.log('Application Commands deployed!');
         }

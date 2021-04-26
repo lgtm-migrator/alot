@@ -16,7 +16,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
         if (options[0]?.type === 'USER') target = options[0].user?.displayAvatarURL({ format: 'png'});
         else if (options[0]?.type === 'STRING') {
             if (!(options[0].value as string)?.match(/(https?:)?\/\/?[^'"<>]+?\.(jpg|jpeg|png)/g)) return interaction.editReply('Please provide a valid image URL!');
-            else target = options[0].value as string;
+            else target = encodeURI(options[0].value as string);
         }
         
         const canvas = new CanvasPlus();
