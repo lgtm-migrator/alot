@@ -16,7 +16,7 @@ export default {
         alot.user?.setActivity('alot of guilds: ' + alot.guilds.cache.size, { type: 'WATCHING' });
 
         const aday = 1000 * 60 * 60 * 24;
-        //Util.Avatars();
+        //Util.Avatars(); djs doesn't fucking work, setting avatars broken, piss off
         //setInterval(avatars, aday);
         console.log('Ready!');
 

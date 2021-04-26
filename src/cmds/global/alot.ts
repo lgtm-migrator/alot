@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageEmbed, MessageAttachment } from 'discord.js';
+import { CommandInteraction, MessageEmbed, MessageAttachment, Message } from 'discord.js';
 import { Command, CanvasImgArray } from 'src/@types/Util';
 //@ts-ignore
 import CanvasPlus from 'pixl-canvas-plus';
@@ -8,7 +8,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-export async function run(interaction: CommandInteraction): Promise<void> {
+export async function run(interaction: CommandInteraction): Promise<void | Message | null> {
     try {
         interaction.defer();
     
@@ -78,6 +78,7 @@ export async function run(interaction: CommandInteraction): Promise<void> {
                         const cv = Canvas.createCanvas(128, 128);
                         const background = await Canvas.loadImage(buffer);
                         const toplayer = await Canvas.loadImage(path.join(__dirname, '../../../data/images/alottoplayer.png'));
+
                         const ctt = cv.getContext('2d');
                         ctt.drawImage(background, 0, 0, cv.width, cv.height);
                         ctt.drawImage(toplayer, 0, 0, cv.width, cv.height);
@@ -89,7 +90,6 @@ export async function run(interaction: CommandInteraction): Promise<void> {
                         .setDescription(`alotofdebugging`)
                         .setImage('attachment://alot.png')
                         .setColor('#997a63')
-                        .setThumbnail((process.alot.user?.displayAvatarURL() as string))
                         .attachFiles([attachment])
                         .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
             

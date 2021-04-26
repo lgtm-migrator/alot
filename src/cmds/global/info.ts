@@ -1,9 +1,9 @@
-import { CommandInteraction, MessageEmbed } from 'discord.js';
+import { CommandInteraction, MessageEmbed, Message } from 'discord.js';
 import { Command } from 'src/@types/Util';
 import { default as si } from 'systeminformation';
 import typecript from 'typescript';
 
-export async function run(interaction: CommandInteraction): Promise<void> {
+export async function run(interaction: CommandInteraction): Promise<void | Message | null> {
     interaction.defer();
 
     const os = await si.osInfo();

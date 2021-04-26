@@ -7,6 +7,8 @@ import { Command } from './@types/Util.js';
 import { Collection } from 'discord.js';
 import { ApplicationCommandData } from 'discord.js';
 import { Md5 } from 'ts-md5/dist/md5.js';
+import { fileURLToPath } from 'url';
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 class Util {
     constructor() {
@@ -262,7 +264,10 @@ class Util {
     
             const pngfiles = files.filter(fileName => fileName.endsWith('.png'));
             const result = pngfiles[Math.floor(Math.random() * pngfiles.length)];
-            await process.alot.user?.setAvatar(result);
+            console.log(path.join(__dirname, result));
+            const done = await process.alot.guilds.cache.get('709061970078335027')?.setIcon('https://media.discordapp.net/attachments/835434457955303455/835991760551280650/alotofpings.png');
+            console.log(done);
+            //await process.alot.user?.setAvatar(result);
         });
     };
 }
