@@ -40,6 +40,8 @@ class Interactions {
             if (missingperms.length > 0) return command.reply('Sorry I can\'t do that without having the required permissions for this command!\nRequired permissions: ' + missingperms.map(x => `\`${x}\``).join(' '), { ephemeral: true });
         }
         
+        Util.IncreaseStat('commands_ran');
+        
         try {
             if (process.env.CI) console.log('Handling interaction ' + command.commandName);
             await cmd.run(command, options);

@@ -53,7 +53,8 @@ export async function run(interaction: CommandInteraction, options: CommandInter
             ctt.drawImage(toplayer, 0, 0, cv.width, cv.height);
 
             const attachment = new MessageAttachment(cv.toBuffer(), 'alot.png');
-
+            Util.IncreaseStat('created_alots');
+            
             let alotstring = '';
             if (options.find(x => x.name === 'image')) alotstring = '';
             else if (options.find(x => x.name === 'user')) alotstring = '`alotof' + options.find(x => x.name === 'user')?.user?.username.toLowerCase().replace(/ /g,'') + '`';
@@ -73,7 +74,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                     .attachFiles([attachment])
                     .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
                     if (interaction.guildID !== '835430397033578497') embed.addField('Want more?', 'There\'s <:alot:835434140496429057> over at [Alot of Emojis](https://discord.gg/2KZqgajxtH)!');
-        
+    
                     return interaction.editReply(embed);
                 }
                 else {
@@ -85,7 +86,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                     .attachFiles([attachment])
                     .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
                     if (interaction.guildID !== '835430397033578497') embed.addField('Want more?', 'There\'s <:alot:835434140496429057> over at [Alot of Emojis](https://discord.gg/2KZqgajxtH)!');
-        
+
                     return interaction.editReply(embed);
                 }
             }

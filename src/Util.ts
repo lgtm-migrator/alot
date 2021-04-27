@@ -1,12 +1,15 @@
 import Discord from 'discord.js';
 import fetch from 'node-fetch';
 import Interactions from './handlers/Interactions.js';
+import SQL from './handlers/SQL.js';
 import recursive from 'recursive-readdir';
 import path from 'path';
 import { Command } from './@types/Util.js';
 import { Collection } from 'discord.js';
 import { ApplicationCommandData } from 'discord.js';
 import Md5 from 'md5';
+import zip from 'zip-promise';
+import del from 'del';
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -17,6 +20,8 @@ class Util {
 
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     static get Interactions() { return Interactions; }
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    static get SQL() { return SQL; }
 
     static delay(inputDelay: number) : Promise<void> {
         // If the input is not a number, instantly resolve
@@ -267,6 +272,41 @@ class Util {
             await process.alot.user?.setAvatar(path.join(__dirname, result));
         });
     };
+
+    static SetStat(stat: string, value: number): void {
+        let s = process.alot.getStat.get(stat);
+
+        if (!s) s = {id: stat, value: 0};
+
+        s.value = value;
+        process.alot.setStat.run(s);
+    }
+
+    static IncreaseStat(stat: string, value = 1): void {
+        const s = process.alot.getStat.get(stat);
+        if (!s) {
+            Util.log('Stat ' + stat + ' was missing when increasing it');
+            return;
+        }
+
+        this.SetStat(stat, s.value + value);
+    }
+
+    static async SQLBkup(): Promise<void> {
+        const db = '../data/SQL';
+        const arc = '../data/SQL.zip';
+        const date = new Date();
+
+        try {
+            await zip.folder(path.resolve(__dirname, db), path.resolve(__dirname, arc));
+            Util.log(`SQL Database Backup:\n\nCreated at: \`${date.toUTCString()}\``, [arc]);
+            await del(arc, { force: true });
+        }
+        
+        catch (ex) {
+            Util.log('Caught an exception while backing up!: ' + ex.stack);
+        }      
+    }
 }
 
 export default Util;

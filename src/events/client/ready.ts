@@ -12,6 +12,14 @@ export default {
 
         await Util.LoadCommands();
         await Util.DeployCommands();
+        await Util.SQL.InitDB();
+
+        for (const item of ['commands_ran', 'created_alots']) {
+            if (!alot.getStat.get(item)) {
+                Util.log('Initializing ' + '`' + item + '`');
+                Util.SetStat(item, 0);
+            }
+        }
     
         const activities = async () => {
             const users = alot.guilds.cache.reduce((r, d) => r + d.memberCount, 0);
@@ -27,6 +35,8 @@ export default {
         setInterval(activities, 30000);
         const anhour = 1000 * 60 * 60;
         setInterval(Util.Avatars, anhour);
+        const twodays = 1000 * 60 * 60 * 48;
+        setInterval(Util.SQLBkup, twodays);
 
         console.log('Ready!');
 

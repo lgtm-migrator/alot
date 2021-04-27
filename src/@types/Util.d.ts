@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import Discord from 'discord.js';
 import Interactions from 'handlers/Interactions';
+import BetterSqlite3 from 'better-sqlite3';
 
 export const Interactions: InteractionsInterface;
 export function delay(num: number): Promise<void>;
@@ -13,12 +14,18 @@ export function fetchJSON(url: string): Promise<unknown>;
 export function truncate(str: string, length: number, useWordBoundary: boolean): string;
 export function normalize(num: number): string;
 export function Avatars(): Promise<void>;
+export function SetStat(stat: string, value: number): void;
+export function IncreaseStat(stat: string, value?: number): void;
+export function SQLBkup(): Promise<void>;
 
 declare module 'discord.js' {
     interface Client {
         commands: Discord.Collection<string, Command>;
         events: Discord.Collection<string, Event>;
         owner: string;
+        getStat: BetterSqlite3.Statement<unknown[]>;
+        setStat: BetterSqlite3.Statement<unknown[]>;
+        db: BetterSqlite3.Database;
     }
 }
 
