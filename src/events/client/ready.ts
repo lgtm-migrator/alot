@@ -25,9 +25,9 @@ export default {
         }
         
         setInterval(activities, 30000);
-        const aday = 1000 * 60 * 60 * 24;
-        //await Util.Avatars(); for some reason png does not work
-        //setInterval(avatars, aday);
+        const anhour = 1000 * 60 * 60;
+        setInterval(Util.Avatars, anhour);
+
         console.log('Ready!');
 
         const lcl = new LCL('../');

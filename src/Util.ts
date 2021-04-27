@@ -264,10 +264,7 @@ class Util {
     
             const pngfiles = files.filter(fileName => fileName.endsWith('.png'));
             const result = pngfiles[Math.floor(Math.random() * pngfiles.length)];
-            console.log(path.join(__dirname, result));
-            const done = await process.alot.guilds.cache.get('709061970078335027')?.setIcon(path.join(__dirname, '../data/avatars/alotOfBans.jpg'));
-            console.log(done);
-            //await process.alot.user?.setAvatar(result);
+            await process.alot.user?.setAvatar(path.join(__dirname, result));
         });
     };
 }
