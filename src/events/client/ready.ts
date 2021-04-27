@@ -15,14 +15,18 @@ export default {
     
         const activities = async () => {
             const users = alot.guilds.cache.reduce((r, d) => r + d.memberCount, 0);
+            const emojis = alot.guilds.cache.get('835430397033578497')?.emojis.cache.size;
+
             alot.user?.setActivity('alot of guilds: ' + alot.guilds.cache.size, { type: 'WATCHING' });
             await Util.delay(10000)
             alot.user?.setActivity('alot of users: ' + users, { type: 'WATCHING' });
+            await Util.delay(10000)
+            alot.user?.setActivity('alot of emojis: ' + emojis, { type: 'WATCHING' });
         }
         
-        setInterval(activities, 20000);
+        setInterval(activities, 30000);
         const aday = 1000 * 60 * 60 * 24;
-        //Util.Avatars(); djs doesn't fucking work, setting avatars broken, piss off
+        //await Util.Avatars(); for some reason png does not work
         //setInterval(avatars, aday);
         console.log('Ready!');
 
