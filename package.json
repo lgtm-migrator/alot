@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "npm i --prefer-offline --no-audit && npx tsc -p ./ && npm run start",
+    "prod": "npm i --prefer-offline --no-audit && rm -rf dist && npx tsc -p ./ && npm run start",
     "start": "cd dist && node alot.js"
   },
   "author": "adrifcastr",
