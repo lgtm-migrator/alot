@@ -33,10 +33,8 @@ export default {
         }
         
         setInterval(activities, 30000);
-        const anhour = 1000 * 60 * 60;
-        setInterval(Util.Avatars, anhour);
-        const twodays = 1000 * 60 * 60 * 48;
-        setInterval(Util.SQLBkup, twodays);
+        setInterval(Util.Avatars, 1000 * 60 * 35);
+        setInterval(Util.SQLBkup, 1000 * 60 * 60 * 48);
 
         console.log('Ready!');
 
