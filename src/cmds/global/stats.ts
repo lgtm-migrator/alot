@@ -12,7 +12,7 @@ export async function run(interaction: CommandInteraction): Promise<void | Messa
     .setColor('#997a63')
     .setThumbnail((process.alot.user?.displayAvatarURL() as string))
     .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
-    if (interaction.guildID !== '835430397033578497') embed.addField('Want more?', 'There\'s <:alot:835434140496429057> over at [Alot of Emojis](https://discord.gg/2KZqgajxtH)!');
+    if (interaction.guildID !== '835430397033578497') embed.addField('Want more?', 'There\'s <:alot:835434140496429057> over at [Alot of Emojis](https://discord.gg/8KRmyaMewe)!');
     
     return interaction.editReply(embed);
 }

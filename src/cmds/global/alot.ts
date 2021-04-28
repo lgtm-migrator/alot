@@ -73,7 +73,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                     .setColor('#997a63')
                     .attachFiles([attachment])
                     .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
-                    if (interaction.guildID !== '835430397033578497') embed.addField('Want more?', 'There\'s <:alot:835434140496429057> over at [Alot of Emojis](https://discord.gg/2KZqgajxtH)!');
+                    if (interaction.guildID !== '835430397033578497') embed.addField('Want more?', 'There\'s <:alot:835434140496429057> over at [Alot of Emojis](https://discord.gg/8KRmyaMewe)!');
     
                     return interaction.editReply(embed);
                 }
@@ -85,7 +85,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                     .setColor('#997a63')
                     .attachFiles([attachment])
                     .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
-                    if (interaction.guildID !== '835430397033578497') embed.addField('Want more?', 'There\'s <:alot:835434140496429057> over at [Alot of Emojis](https://discord.gg/2KZqgajxtH)!');
+                    if (interaction.guildID !== '835430397033578497') embed.addField('Want more?', 'There\'s <:alot:835434140496429057> over at [Alot of Emojis](https://discord.gg/8KRmyaMewe)!');
 
                     return interaction.editReply(embed);
                 }
@@ -98,7 +98,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                 .setColor('#997a63')
                 .attachFiles([attachment])
                 .setFooter('alot of alots | © adrifcastr', process.alot.user?.displayAvatarURL());
-                if (interaction.guildID !== '835430397033578497') embed.addField('Want more?', 'There\'s <:alot:835434140496429057> over at [Alot of Emojis](https://discord.gg/2KZqgajxtH)!');
+                if (interaction.guildID !== '835430397033578497') embed.addField('Want more?', 'There\'s <:alot:835434140496429057> over at [Alot of Emojis](https://discord.gg/8KRmyaMewe)!');
 
                 return interaction.editReply(embed);
             }
