@@ -4,6 +4,8 @@ import { Command } from 'src/@types/Util';
 import CanvasPlus from 'pixl-canvas-plus';
 import Canvas from 'canvas';
 import Util from '../../Util.js';
+//@ts-ignore
+import resizeImg from 'resize-image-buffer';
 import path from 'path';
 import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -18,12 +20,136 @@ export async function run(interaction: CommandInteraction, options: CommandInter
         }
         
         const canvas = new CanvasPlus();
-        const cvs = Canvas.createCanvas(128, 128);
+        const cvs = Canvas.createCanvas(530, 476);
+        const ctx = cvs.getContext('2d');
         const image = await Canvas.loadImage(target as string);
+        const tvs = Canvas.createCanvas(image.width + ((25 / 100) * image.width), image.height + ((25 / 100) * image.height));
+
+        let glowColor = "black";
+        let imgData, tdata: any;
+
+        const defineNonTransparent = (x: number, y: number) => {
+            let a = tdata[(y * tvs.width + x) * 4 + 3];
+            return (a > 20);
+        }
+
+        const ttx = tvs.getContext('2d');
+        ttx.drawImage(image, 0, 0);
+
+        // grab the image's pixel data
+        imgData = ttx.getImageData(0, 0, tvs.width, tvs.height);
+        tdata = imgData.data;
+        let geom: any = {};
+
+        (function() {
+            // d3-plugin for calculating outline paths
+            // License: https://github.com/d3/d3-plugins/blob/master/LICENSE
+             
+            geom.contour = function(grid: any, start: any) { 
+              let s = start || d3_geom_contourStart(grid), // starting point 
+                  c = [],    // contour polygon 
+                  x = s[0],  // current x position 
+                  y = s[1],  // current y position 
+                  dx = 0,    // next x direction 
+                  dy = 0,    // next y direction 
+                  pdx = NaN, // previous x direction 
+                  pdy = NaN, // previous y direction 
+                  i = 0; 
+          
+              do { 
+                // determine marching squares index 
+                i = 0; 
+                if (grid(x-1, y-1)) i += 1; 
+                if (grid(x,   y-1)) i += 2; 
+                if (grid(x-1, y  )) i += 4; 
+                if (grid(x,   y  )) i += 8; 
+          
+                // determine next direction 
+                if (i === 6) { 
+                  dx = pdy === -1 ? -1 : 1; 
+                  dy = 0; 
+                } else if (i === 9) { 
+                  dx = 0; 
+                  dy = pdx === 1 ? -1 : 1; 
+                } else { 
+                  dx = d3_geom_contourDx[i]; 
+                  dy = d3_geom_contourDy[i]; 
+                } 
+          
+                // update contour polygon 
+                if (dx != pdx && dy != pdy) { 
+                  c.push([x, y]); 
+                  pdx = dx; 
+                  pdy = dy; 
+                } 
+          
+                x += dx; 
+                y += dy; 
+              } while (s[0] != x || s[1] != y); 
+          
+              return c; 
+            }; 
+          
+            // lookup tables for marching directions 
+            let d3_geom_contourDx = [1, 0, 1, 1,-1, 0,-1, 1,0, 0,0,0,-1, 0,-1,NaN], 
+                d3_geom_contourDy = [0,-1, 0, 0, 0,-1, 0, 0,1,-1,1,1, 0,-1, 0,NaN]; 
+          
+            function d3_geom_contourStart(grid: any) { 
+              var x = 0, 
+                  y = 0; 
+          
+              // search for a starting point; begin at origin 
+              // and proceed along outward-expanding diagonals 
+              while (true) { 
+                if (grid(x,y)) { 
+                  return [x,y]; 
+                } 
+                if (x === 0) { 
+                  x = y + 1; 
+                  y = 0; 
+                } else { 
+                  x = x - 1; 
+                  y = y + 1; 
+                } 
+              } 
+            } 
+          
+        })();
+
+        const points = geom.contour(defineNonTransparent);
+
+        ttx.clearRect(0, 0, tvs.width, tvs.height);
+
+        const drawOutline = (points: any, offsetX: any) => {
+            // draw results
+            ttx.beginPath();
+            ttx.moveTo(points[0][0], points[0][1]);
+            for (let i = 1; i < points.length; i++) {
+                let point = points[i];
+                ttx.lineTo(point[0], point[1]);
+            }
+            ttx.closePath();
+            ttx.stroke();
+        }
+
+        // use shadowing to apply glow to the outline
+        ttx.save();
+        ttx.strokeStyle = glowColor;
+        ttx.shadowColor = glowColor;
+        for (let i = 0; i < 10; i++) {
+            ttx.shadowBlur = i * 2;
+            drawOutline(points, 0);
+        }
+        ttx.shadowBlur = 15;
+        drawOutline(points, 0);
+        ttx.restore();
+    
+        // redraw the image into the glow outline
+        ttx.drawImage(image, 0, 0);
+        const outlinedimg = await Canvas.loadImage(tvs.toBuffer());
 
         for (let i = 0; i < 400; i++) { // 'pattern' aka just draw this alot until it covers everything randomly
-            const ctx = cvs.getContext('2d');
-            ctx.drawImage(image, Math.random() * (129 - 0) + 0, Math.random() * (129 - 0) + 0, 30, 30);
+            ctx.drawImage(outlinedimg, Math.random() * (531 - 0) + 0, Math.random() * (477 - 0) + 0, 120, 120);
         }
 
         canvas.load(cvs.toBuffer(), async (err: Error) => {
@@ -44,15 +170,14 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                 return interaction.editReply('An error occured. Please make sure that the URL is well formed.');
             }
                 
-            const cv = Canvas.createCanvas(128, 128);
             const background = await Canvas.loadImage(buffer);
             const toplayer = await Canvas.loadImage(path.join(__dirname, '../../../data/images/alottoplayer.png'));
 
-            const ctt = cv.getContext('2d');
-            ctt.drawImage(background, 0, 0, cv.width, cv.height);
-            ctt.drawImage(toplayer, 0, 0, cv.width, cv.height);
+            ctx.clearRect(0, 0, cvs.width, cvs.height);
+            ctx.drawImage(background, 0, 0, cvs.width, cvs.height);
+            ctx.drawImage(toplayer, 0, 0, cvs.width, cvs.height);
 
-            const attachment = new MessageAttachment(cv.toBuffer(), 'alot.png');
+            const attachment = new MessageAttachment(cvs.toBuffer(), 'alot.png');
             Util.IncreaseStat('created_alots');
             
             let alotstring = '';
@@ -64,7 +189,11 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                 const member = await interaction.guild?.members.fetch(interaction.user);
 
                 if (member?.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS) && interaction.guild?.me?.permissions.has(Permissions.FLAGS.MANAGE_EMOJIS)) {
-                    const emoji = await interaction.guild?.emojis.create(cv.toBuffer(), 'alotofsomething');
+                    const emojiimg = await resizeImg(cvs.toBuffer(), {
+                        width: 265,
+                        height: 238,
+                      });
+                    const emoji = await interaction.guild?.emojis.create(emojiimg, 'alotofsomething');
 
                     const embed = new MessageEmbed()
                     .setTitle('Here is your alot:')
