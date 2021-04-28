@@ -17,7 +17,6 @@ export function Avatars(): Promise<void>;
 export function SetStat(stat: string, value: number): void;
 export function IncreaseStat(stat: string, value?: number): void;
 export function SQLBkup(): Promise<void>;
-export function Contour(grid: any, start: any): any[][]
 
 declare module 'discord.js' {
     interface Client {
