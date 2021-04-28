@@ -148,7 +148,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
         ttx.drawImage(image, 0, 0);
         const outlinedimg = await Canvas.loadImage(tvs.toBuffer());
 
-        for (let i = 0; i < 700; i++) { // 'pattern' aka just draw this alot until it covers everything randomly
+        for (let i = 0; i < 1000; i++) { // 'pattern' aka just draw this alot until it covers everything randomly
             ctx.drawImage(outlinedimg, Math.random() * (531 - 0) + 0, Math.random() * (477 - 0) + 0, 120, 120);
         }
 
