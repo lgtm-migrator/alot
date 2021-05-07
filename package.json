@@ -11,6 +11,7 @@
   },
   "author": "adrifcastr",
   "dependencies": {
+    "@sapphire/framework": "^1.0.2",
     "@types/better-sqlite3": "^5.4.1",
     "@types/md5": "^2.3.0",
     "@types/node": "^14.14.41",
