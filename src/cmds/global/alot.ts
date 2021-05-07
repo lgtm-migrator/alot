@@ -95,7 +95,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
                 d3_geom_contourDy = [0,-1, 0, 0, 0,-1, 0, 0,1,-1,1,1, 0,-1, 0,NaN]; 
           
             function d3_geom_contourStart(grid: any) { 
-              var x = 0, 
+              let x = 0, 
                   y = 0; 
           
               // search for a starting point; begin at origin 
