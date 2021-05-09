@@ -15,7 +15,7 @@ export async function run(interaction: CommandInteraction, options: CommandInter
         let target: string | undefined = interaction.user.displayAvatarURL({ format: 'png'});
         if (options[0]?.type === 'USER') target = options[0].user?.displayAvatarURL({ format: 'png'});
         else if (options[0]?.type === 'STRING') {
-            if (!(options[0].value as string)?.match(/(https?:)?\/\/?[^'"<>]+?\.(jpg|jpeg|png)/g)) return interaction.editReply('Please provide a valid image URL!');
+            if (!(options[0].value as string)?.match(/(https?:)?\/\/?[^'"<>]+?\.(jpg|jpeg|png|svg|gif)/g)) return interaction.editReply('Please provide a valid image URL!');
             else target = encodeURI(options[0].value as string);
         }
         
@@ -146,10 +146,17 @@ export async function run(interaction: CommandInteraction, options: CommandInter
     
         // redraw the image into the glow outline
         ttx.drawImage(image, 0, 0);
+        
         const outlinedimg = await Canvas.loadImage(tvs.toBuffer());
 
+        const bigval = Math.max(outlinedimg.width, outlinedimg.height);
+        const percentage = 160 / bigval;
+
         for (let i = 0; i < 1000; i++) { // 'pattern' aka just draw this alot until it covers everything randomly
-            ctx.drawImage(outlinedimg, Math.random() * (531 - 0) + 0, Math.random() * (477 - 0) + 0, 120, 120);
+            let degree = (Math.random() * (360 - 0) + 0) * Math.PI / 180;
+            ctx.rotate(degree);
+            ctx.drawImage(outlinedimg, Math.random() * (531 - 0) + 0, Math.random() * (477 - 0) + 0, outlinedimg.width * percentage, outlinedimg.height * percentage);
+            ctx.rotate(degree * -1);
         }
 
         canvas.load(cvs.toBuffer(), async (err: Error) => {
