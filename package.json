@@ -20,7 +20,7 @@
     "@types/sharp": "^0.28.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
-    "better-sqlite3": "^7.1.5",
+    "better-sqlite3": "^7.4.5",
     "canvas": "^2.6.1",
     "canvas-text-wrapper": "^0.10.2",
     "del": "^6.0.0",
