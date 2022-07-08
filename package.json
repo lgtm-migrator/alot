@@ -29,7 +29,7 @@
     "eslint": "^7.24.0",
     "last-commit-log": "^3.1.1",
     "md5": "^2.3.0",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "node-fetch": "^2.6.1",
     "pixl-canvas-plus": "^2.0.10",
     "pretty-error": "^3.0.3",
